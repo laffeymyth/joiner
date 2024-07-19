@@ -1,4 +1,0 @@
-name: joiner
-version: '1.0-SNAPSHOT'
-main: net.laffeymyth.joiner.Joiner
-api-version: '1.21'

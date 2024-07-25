@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.Tag;
+import net.kyori.adventure.text.minimessage.tag.TagPattern;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.laffeymyth.joiner.model.JoinMessage;
 import net.laffeymyth.joiner.model.JoinerUser;
 import net.laffeymyth.joiner.service.JoinerUserService;
@@ -13,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,8 +55,11 @@ public class JoinerListener implements Listener {
             return;
         }
 
-        event.joinMessage(Component.empty().append(miniMessage.deserialize(joinMessage.getMessage()
-                        .replace("%player%", player.getName()))));
+
+        Component joinMessageComponent = miniMessage.deserialize(joinMessage.getMessage(),
+                TagResolver.resolver("player", (argumentQueue, context) -> Tag.inserting(player.displayName())));
+
+        event.joinMessage(Component.empty().append(joinMessageComponent));
     }
 
     @EventHandler
